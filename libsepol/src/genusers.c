@@ -7,7 +7,11 @@
 
 #include <sepol/policydb/policydb.h>
 
-#ifndef DARWIN
+#if defined(DARWIN) || defined(ANDROID)
+#define NO_STDIO_EXT
+#endif
+
+#ifndef NO_STDIO_EXT
 #include <stdio_ext.h>
 #endif
 
@@ -47,7 +51,7 @@ static int load_users(struct policydb *policydb, const char *path)
 	if (fp == NULL)
 		return -1;
 
-#ifdef DARWIN
+#ifdef NO_STDIO_EXT
 	if ((buffer = (char *)malloc(255 * sizeof(char))) == NULL) {
 	  ERR(NULL, "out of memory");
 	  return -1;
